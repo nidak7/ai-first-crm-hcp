@@ -1,0 +1,80 @@
+:root {
+  font-family: 'Inter', system-ui, sans-serif;
+  color: #1f2937;
+  background: #f4f6fb;
+}
+
+body {
+  margin: 0;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 16px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.form-grid, .inline-form {
+  display: grid;
+  gap: 10px;
+}
+
+input, select, textarea, button {
+  font: inherit;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+}
+
+button {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+button.active {
+  background: #111827;
+}
+
+.tab-row {
+  display: flex;
+  gap: 10px;
+}
+
+.chat-box {
+  max-height: 250px;
+  overflow-y: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+  background: #fafafa;
+}
+
+.msg { margin: 8px 0; }
+.msg.user { color: #1d4ed8; }
+.msg.assistant { color: #065f46; }
+
+.list-item {
+  border-top: 1px solid #eee;
+  padding: 10px 0;
+}
+
+.list-item span {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.hint {
+  font-size: 13px;
+  color: #6b7280;
+}
