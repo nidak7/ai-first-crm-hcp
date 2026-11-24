@@ -1,100 +1,29 @@
-# AI-First CRM HCP Module – Log Interaction Screen
+# AI-First CRM: Log HCP Interaction
 
-This repository contains a full-stack implementation for **Task 1** and support material for **Task 2**.
+This is a small CRM screen where a sales rep logs a meeting with a healthcare professional (HCP), either with a form or by chatting. The backend can use an LLM to write a summary, sentiment and follow-up action for the notes.
 
-## What is built
+## What it does
 
-- **Frontend:** React + Redux (Vite) with Google **Inter** font.
-- **Backend:** FastAPI + SQLAlchemy.
-- **AI Agent:** LangGraph + Groq model integration (`gemma2-9b-it`) with fallback mode when key is not configured.
-- **Database:** SQL via SQLAlchemy (SQLite default for local run; can be switched to Postgres/MySQL).
+- Form to log an interaction (HCP name, specialty, type, channel, notes)
+- Chat box that talks to a LangGraph agent with five tools: log interaction, edit interaction, suggest next action, draft a follow-up email, and a compliance check on the notes
+- List and edit saved interactions
+- If no Groq key is set, the app still runs and uses simple placeholder text instead of the LLM
 
----
+## Tech used
 
-## 1) Core Feature: Log Interaction Screen
+Python, FastAPI, SQLAlchemy, SQLite by default (Postgres through `DATABASE_URL`), LangGraph, LangChain Groq, React, Redux, Vite
 
-The screen supports two modes:
+## How to run
 
-1. **Structured Form**
-   - Field rep enters HCP name, specialty, interaction type, channel, and notes.
-   - Backend uses AI service to generate summary, sentiment, and follow-up action.
-
-2. **Conversational Chat**
-   - Rep logs or edits interactions using natural language.
-   - LangGraph agent can call tools to perform CRM actions.
-
----
-
-## 2) LangGraph Agent Role
-
-The agent acts as an **HCP CRM copilot** that interprets user intent and executes operational tools. It reduces field rep admin effort and keeps records analysis-ready.
-
-### Implemented Tools (5)
-
-1. **Log Interaction Tool** ✅
-   - Captures HCP name + free-text notes.
-   - Uses LLM summarization helper and saves interaction to DB.
-
-2. **Edit Interaction Tool** ✅
-   - Updates an existing interaction by interaction ID.
-   - Re-runs summary/sentiment/follow-up generation.
-
-3. **Suggest Next Best Action Tool**
-   - Reads recent HCP history.
-   - Recommends next sales/medical engagement step.
-
-4. **Generate Follow-up Email Tool**
-   - Generates a compliant follow-up draft for HCP communication.
-
-5. **Compliance Check Tool**
-   - Flags risky terms (off-label, inducement style words, etc.) in notes.
-
----
-
-## 3) Project Structure
-
-```text
-backend/
-  app/
-    api/routes.py
-    core/config.py
-    db/
-    models/interaction.py
-    schemas/interaction.py
-    services/
-  tests/
-frontend/
-  src/
-    app/store.js
-    components/
-    features/
-docs/
-  qms-module-explainer.md
-```
-
----
-
-## 4) Local Setup
-
-## Backend
+Backend:
 
 ```bash
 cd backend
-python -m venv .venv
-source .venv/bin/activate
 pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
 
-Environment variables (optional):
-
-```bash
-export GROQ_API_KEY="your_groq_key"
-export GROQ_MODEL="gemma2-9b-it"
-export DATABASE_URL="postgresql+psycopg2://user:pass@localhost:5432/aifirstcrm"
-```
-
-## Frontend
+Frontend:
 
 ```bash
 cd frontend
@@ -102,26 +31,12 @@ npm install
 npm run dev
 ```
 
-Set frontend API URL if needed:
+Optional settings: `GROQ_API_KEY`, `GROQ_MODEL`, `DATABASE_URL`, `VITE_API_URL`.
 
-```bash
-export VITE_API_URL="http://localhost:8000/api"
-```
+Endpoints: `GET /api/health`, `POST` and `GET /api/interactions`, `GET` and `PUT /api/interactions/{id}`, `POST /api/agent/chat`.
 
----
+## What I would improve
 
-## 5) API Endpoints
-
-- `GET /api/health`
-- `POST /api/interactions`
-- `PUT /api/interactions/{id}`
-- `GET /api/interactions`
-- `GET /api/interactions/{id}`
-- `POST /api/agent/chat`
-
----
-
-## 6) Notes
-
-- The app defaults to SQLite for quick run; switch to Postgres/MySQL by changing `DATABASE_URL`.
-- If Groq key is missing, chat endpoint falls back with guidance text so app remains runnable.
+- Only one test exists (the health check)
+- The LLM reply is not parsed as JSON, so the sentiment is a rough guess
+- CORS allows every origin, which is fine for local use only
